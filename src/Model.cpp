@@ -1986,6 +1986,30 @@ void Model::load(const std::string& filename)
 
 		globjects::debug() << "Minimum bounds: " << m_minimumBounds;
 		globjects::debug() << "Maximum bounds: " << m_maximumBounds;
+
+		m_vertexBuffer->setStorage(m_vertices, gl::GL_NONE_BIT);
+		m_indexBuffer->setStorage(m_indices, gl::GL_NONE_BIT);
+
+		auto vertexBindingPosition = m_vertexArray->binding(0);
+		vertexBindingPosition->setAttribute(0);
+		vertexBindingPosition->setBuffer(m_vertexBuffer.get(), 0, sizeof(Vertex));
+		vertexBindingPosition->setFormat(3, GL_FLOAT);
+		m_vertexArray->enable(0);
+
+		auto vertexBindingNormal = m_vertexArray->binding(1);
+		vertexBindingNormal->setAttribute(1);
+		vertexBindingNormal->setBuffer(m_vertexBuffer.get(), sizeof(vec3), sizeof(Vertex));
+		vertexBindingNormal->setFormat(3, GL_FLOAT);
+		m_vertexArray->enable(1);
+
+		auto vertexBindingTexCoord = m_vertexArray->binding(2);
+		vertexBindingTexCoord->setAttribute(2);
+		vertexBindingTexCoord->setBuffer(m_vertexBuffer.get(), sizeof(vec3) + sizeof(vec3), sizeof(Vertex));
+		vertexBindingTexCoord->setFormat(2, GL_FLOAT);
+		m_vertexArray->enable(2);
+
+		m_vertexArray->bindElementBuffer(m_indexBuffer.get());
+
 	}
 	else
 	{
@@ -2026,5 +2050,20 @@ vec3 Model::minimumBounds() const
 vec3 Model::maximumBounds() const
 {
 	return m_maximumBounds;
+}
+
+VertexArray & Model::vertexArray()
+{
+	return *m_vertexArray.get();
+}
+
+Buffer & Model::vertexBuffer()
+{
+	return *m_vertexBuffer.get();
+}
+
+Buffer & Model::indexBuffer()
+{
+	return *m_indexBuffer.get();
 }
 

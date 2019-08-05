@@ -33,10 +33,6 @@ namespace minity
 
 	private:
 
-		std::unique_ptr<globjects::Buffer> m_vertices = std::make_unique<globjects::Buffer>();
-		std::unique_ptr< globjects::Buffer > m_indices = std::make_unique<globjects::Buffer>();
-
-		std::unique_ptr<globjects::VertexArray> m_vao = std::make_unique<globjects::VertexArray>();
 
 		std::unique_ptr<globjects::StaticStringSource> m_shaderSourceDefines = nullptr;
 		std::unique_ptr<globjects::NamedString> m_shaderDefines = nullptr;

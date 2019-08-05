@@ -25,31 +25,6 @@ ModelRenderer::ModelRenderer(Viewer* viewer) : Renderer(viewer)
 {
 	Shader::hintIncludeImplementation(Shader::IncludeImplementation::Fallback);
 
-	m_vertices->setStorage(viewer->scene()->model()->vertices(), gl::GL_NONE_BIT);
-	m_indices->setStorage(viewer->scene()->model()->indices(), gl::GL_NONE_BIT);
-
-
-	auto vertexBindingPosition = m_vao->binding(0);
-	vertexBindingPosition->setAttribute(0);
-	vertexBindingPosition->setBuffer(m_vertices.get(), 0, sizeof(Vertex));
-	vertexBindingPosition->setFormat(3, GL_FLOAT);
-	m_vao->enable(0);
-
-	auto vertexBindingNormal = m_vao->binding(1);
-	vertexBindingNormal->setAttribute(1);
-	vertexBindingNormal->setBuffer(m_vertices.get(), sizeof(vec3), sizeof(Vertex));
-	vertexBindingNormal->setFormat(3, GL_FLOAT);
-	m_vao->enable(1);
-
-	auto vertexBindingTexCoord = m_vao->binding(2);
-	vertexBindingTexCoord->setAttribute(2);
-	vertexBindingTexCoord->setBuffer(m_vertices.get(), sizeof(vec3) + sizeof(vec3), sizeof(Vertex));
-	vertexBindingTexCoord->setFormat(2, GL_FLOAT);
-	m_vao->enable(2);
-
-	m_vao->bindElementBuffer(m_indices.get());
-
-
 	//	std::cout << viewer()->scene()->model()->shapes().
 
 	m_shaderSourceDefines = StaticStringSource::create("");
@@ -112,7 +87,7 @@ void ModelRenderer::display()
 	
 	m_programBase->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix);
 
-	m_vao->bind();
+	viewer()->scene()->model()->vertexArray().bind();
 	
 	m_programBase->use();
 	//m_vao->drawArrays(GL_POINTS, 0, viewer()->scene()->model()->indices().size());
@@ -140,6 +115,8 @@ void ModelRenderer::display()
 
 	ImGui::End();
 
+
+
 	for (uint i = 0; i < groups.size(); i++)
 	{
 
@@ -156,7 +133,7 @@ void ModelRenderer::display()
 			}
 
 			//			std::cout << groups.at(i).name << std::endl;
-			m_vao->drawElements(GL_TRIANGLES, groups.at(i).count(), GL_UNSIGNED_INT, (void*)(sizeof(GLuint)*groups.at(i).startIndex));
+			viewer()->scene()->model()->vertexArray().drawElements(GL_TRIANGLES, groups.at(i).count(), GL_UNSIGNED_INT, (void*)(sizeof(GLuint)*groups.at(i).startIndex));
 
 			if (material.diffuseTexture)
 			{
@@ -170,7 +147,7 @@ void ModelRenderer::display()
 	//m_vao->drawElements(GL_TRIANGLES, viewer()->scene()->model()->indices().size(), GL_UNSIGNED_INT);
 	m_programBase->release();
 
-	m_vao->unbind();
+	viewer()->scene()->model()->vertexArray().unbind();
 
 	// Restore OpenGL state
 	currentState->apply();

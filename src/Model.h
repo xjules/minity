@@ -5,6 +5,9 @@
 #include <glbinding/gl/enum.h>
 #include <glbinding/gl/functions.h>
 #include <globjects/Texture.h>
+#include <globjects/VertexArray.h>
+#include <globjects/VertexAttributeBinding.h>
+#include <globjects/Buffer.h>
 
 #include <vector>
 
@@ -58,6 +61,9 @@ namespace minity
 		glm::vec3 minimumBounds() const;
 		glm::vec3 maximumBounds() const;
 
+		globjects::VertexArray & vertexArray();
+		globjects::Buffer & vertexBuffer();
+		globjects::Buffer & indexBuffer();
 
 	private:
 
@@ -70,5 +76,10 @@ namespace minity
 
 		glm::vec3 m_minimumBounds = glm::vec3(0.0);
 		glm::vec3 m_maximumBounds = glm::vec3(0.0);
+
+		std::unique_ptr<globjects::VertexArray> m_vertexArray = std::make_unique<globjects::VertexArray>();
+		std::unique_ptr<globjects::Buffer> m_vertexBuffer = std::make_unique<globjects::Buffer>();
+		std::unique_ptr< globjects::Buffer > m_indexBuffer = std::make_unique<globjects::Buffer>();
+
 	};
 }
