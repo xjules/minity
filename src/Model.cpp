@@ -1,5 +1,6 @@
 #include "Model.h"
 
+#include <list>
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -1419,23 +1420,23 @@ public:
 							// v//n
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							while (iss >> v >> ("//") >> n)
@@ -1448,9 +1449,9 @@ public:
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(groupIterator->normalIndices[groupIterator->normalIndices.size() - 2]);
 
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							break;
@@ -1462,22 +1463,22 @@ public:
 						if (iss >> v >> ("/") >> t >> ("/") >> n)
 						{
 							// v/t/n
-							groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-							groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
-							groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+							groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+							groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
+							groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 
 							if (iss >> v >> ("/") >> t >> ("/") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							if (iss >> v >> ("/") >> t >> ("/") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							while (iss >> v >> ("/") >> t >> ("/") >> n)
@@ -1490,9 +1491,9 @@ public:
 								groupIterator->texCoordIndices.push_back(groupIterator->texCoordIndices[groupIterator->texCoordIndices.size() - 2]);
 								groupIterator->normalIndices.push_back(groupIterator->normalIndices[groupIterator->normalIndices.size() - 2]);
 
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
-								groupIterator->normalIndices.push_back(n < 0 ? unsigned int(n + normals.size()) : unsigned int(n));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
+								groupIterator->normalIndices.push_back(n < 0 ? (unsigned int) (n + normals.size()) : (unsigned int) (n));
 							}
 
 							break;
@@ -1504,21 +1505,21 @@ public:
 						if (iss >> v >> ("/") >> t)
 						{
 							// v/t
-							groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-							groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
+							groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+							groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
 							groupIterator->normalIndices.push_back(0);
 
 							if (iss >> v >> ("/") >> t)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v >> ("/") >> t)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
@@ -1532,8 +1533,8 @@ public:
 								groupIterator->texCoordIndices.push_back(groupIterator->texCoordIndices[groupIterator->texCoordIndices.size() - 2]);
 								groupIterator->normalIndices.push_back(0);
 
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? unsigned int(t + texCoords.size()) : unsigned int(t));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (unsigned int) (t + texCoords.size()) : (unsigned int) (t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
@@ -1547,21 +1548,21 @@ public:
 							// v
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
@@ -1576,7 +1577,7 @@ public:
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 
-								groupIterator->positionIndices.push_back(v < 0 ? unsigned int(v + positions.size()) : unsigned int(v));
+								groupIterator->positionIndices.push_back(v < 0 ? (unsigned int) (v + positions.size()) : (unsigned int) (v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
