@@ -1,7 +1,9 @@
 # Project specific
 
-./build
-./bin
+bin	# Ignore compiled files
+build	# Ignore build files
+ext	# Ignore external build files
+lib	# Ignore external libraries
 
 
 # Created by https://www.gitignore.io/api/c++,clion
