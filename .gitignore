@@ -1,9 +1,13 @@
 # Project specific
 
-bin	# Ignore compiled files
-build	# Ignore build files
-ext	# Ignore external build files
-lib	# Ignore external libraries
+# Ignore compiled files
+bin
+# Ignore build files
+build
+# Ignore external build files
+ext
+# Ignore external libraries
+lib
 
 
 # Created by https://www.gitignore.io/api/c++,clion
@@ -125,3 +129,6 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/c++,clion
+
+# Ignore the whole .idea folder -- added by Juraj
+.idea
