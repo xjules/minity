@@ -37,7 +37,7 @@ do
     cd $PROJECT_HOME/ext/$name
     [ -d ./build ] && rm -rf build
     mkdir build && cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX:PATH="$PROJECT_HOME/lib" -DCMAKE_PREFIX_PATH="$PROJECT_HOME/lib" -DBUILD_SHARED_LIBS=OFF -DOPTION_BUILD_EXAMPLES=OFF -Dglfw3_DIR=$PROJECT_HOME/lib/lib64/cmake/glfw3 -DOPTION_BUILD_TOOLS=ON
+    cmake .. -DCMAKE_INSTALL_PREFIX:PATH="$PROJECT_HOME/lib" -DCMAKE_PREFIX_PATH="$PROJECT_HOME/lib" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DOPTION_BUILD_EXAMPLES=OFF -Dglfw3_DIR=$PROJECT_HOME/lib/lib64/cmake/glfw3 -DOPTION_BUILD_TOOLS=ON
     echo "Building $name"
     make install
     echo "Done."
@@ -49,9 +49,15 @@ do
     cd $PROJECT_HOME/ext/$name
     [ -d ./build ] && rm -rf build
     mkdir build && cd build
-    cmake .. -DCMAKE_INSTALL_PREFIX:PATH="$PROJECT_HOME/lib" -DCMAKE_PREFIX_PATH="$PROJECT_HOME/lib" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DOPTION_BUILD_EXAMPLES=OFF 
+    cmake .. -DCMAKE_INSTALL_PREFIX:PATH="$PROJECT_HOME/lib" -DCMAKE_PREFIX_PATH="$PROJECT_HOME/lib" -DBUILD_SHARED_LIBS=OFF -DOPTION_BUILD_EXAMPLES=OFF 
     echo "Building $name"
     make install
     echo "Done."
 done
+
+
+echo "Removing installation files."
+cd $PROJECT_HOME
+rm -rf ext
+echo "Done."
 
