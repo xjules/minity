@@ -12,7 +12,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
@@ -23,44 +22,23 @@ using namespace globjects;
 
 ModelRenderer::ModelRenderer(Viewer* viewer) : Renderer(viewer)
 {
-	Shader::hintIncludeImplementation(Shader::IncludeImplementation::Fallback);
+	m_lightVertices->setStorage(std::array<vec3, 1>({ vec3(0.0f) }), GL_NONE_BIT);
+	auto lightVertexBinding = m_lightArray->binding(0);
+	lightVertexBinding->setBuffer(m_lightVertices.get(), 0, sizeof(vec3));
+	lightVertexBinding->setFormat(3, GL_FLOAT);
+	m_lightArray->enable(0);
+	m_lightArray->unbind();
 
-	//	std::cout << viewer()->scene()->model()->shapes().
+	createShaderProgram("model-base", {
+		{ GL_VERTEX_SHADER,"./res/model/model-base-vs.glsl" },
+		{ GL_GEOMETRY_SHADER,"./res/model/model-base-gs.glsl" },
+		{ GL_FRAGMENT_SHADER,"./res/model/model-base-fs.glsl" },
+		}, { "./res/model/model-globals.glsl" });
 
-	m_shaderSourceDefines = StaticStringSource::create("");
-	m_shaderDefines = NamedString::create("/defines.glsl", m_shaderSourceDefines.get());
-
-	m_shaderSourceGlobals = File::create("./res/model/globals.glsl");
-	m_shaderGlobals = NamedString::create("/globals.glsl", m_shaderSourceGlobals.get());
-
-	m_vertexShaderSourceBase = Shader::sourceFromFile("./res/model/base-vs.glsl");
-	m_geometryShaderSourceBase = Shader::sourceFromFile("./res/model/base-gs.glsl");
-	m_fragmentShaderSourceBase = Shader::sourceFromFile("./res/model/base-fs.glsl");
-
-	m_vertexShaderTemplateBase = Shader::applyGlobalReplacements(m_vertexShaderSourceBase.get());
-	m_geometryShaderTemplateBase = Shader::applyGlobalReplacements(m_geometryShaderSourceBase.get());
-	m_fragmentShaderTemplateBase = Shader::applyGlobalReplacements(m_fragmentShaderSourceBase.get());
-
-	m_vertexShaderBase = Shader::create(GL_VERTEX_SHADER, m_vertexShaderTemplateBase.get());
-	m_geometryShaderBase = Shader::create(GL_GEOMETRY_SHADER, m_geometryShaderTemplateBase.get());
-	m_fragmentShaderBase = Shader::create(GL_FRAGMENT_SHADER, m_fragmentShaderTemplateBase.get());
-
-	//m_programBase->attach(m_vertexShaderBase.get(), m_geometryShaderBase.get(), m_fragmentShaderBase.get());
-	m_programBase->attach(m_vertexShaderBase.get(), m_fragmentShaderBase.get());
-
-
-
-
-	
-}
-
-std::list<globjects::File*> ModelRenderer::shaderFiles() const
-{
-	return std::list<globjects::File*>({
-		m_vertexShaderSourceBase.get(),
-		m_geometryShaderSourceBase.get(),
-		m_fragmentShaderSourceBase.get()
-		});
+	createShaderProgram("model-light", {
+		{ GL_VERTEX_SHADER,"./res/model/model-light-vs.glsl" },
+		{ GL_FRAGMENT_SHADER,"./res/model/model-light-fs.glsl" },
+		}, { "./res/model/model-globals.glsl" });
 }
 
 void ModelRenderer::display()
@@ -73,38 +51,47 @@ void ModelRenderer::display()
 	const mat4 inverseViewMatrix = inverse(viewMatrix);
 	const mat4 modelViewMatrix = viewer()->modelViewTransform();
 	const mat4 inverseModelViewMatrix = inverse(modelViewMatrix);
+	const mat4 modelLightMatrix = viewer()->modelLightTransform();
+	const mat4 inverseModelLightMatrix = inverse(modelLightMatrix);
 	const mat4 modelViewProjectionMatrix = viewer()->modelViewProjectionTransform();
 	const mat4 inverseModelViewProjectionMatrix = inverse(modelViewProjectionMatrix);
 	const mat4 projectionMatrix = viewer()->projectionTransform();
 	const mat4 inverseProjectionMatrix = inverse(projectionMatrix);
 	const mat3 normalMatrix = mat3(transpose(inverseModelViewMatrix));
 	const mat3 inverseNormalMatrix = inverse(normalMatrix);
+	const vec2 viewportSize = viewer()->viewportSize();
 
-	//viewer()->scene()->model()->shapes().at(0).model.indices
+	auto shaderProgramModelBase = shaderProgram("model-base");
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
-	
-	m_programBase->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix);
 
 	viewer()->scene()->model()->vertexArray().bind();
-	
-	m_programBase->use();
-	//m_vao->drawArrays(GL_POINTS, 0, viewer()->scene()->model()->indices().size());
 
 	const std::vector<Group> & groups = viewer()->scene()->model()->groups();
 	const std::vector<Material> & materials = viewer()->scene()->model()->materials();
 
-	bool open = true;
-	ImGui::ShowDemoWindow(&open);
-
 	static std::vector<bool> groupEnabled(groups.size(), true);
+	static bool wireframeEnabled = true;
+	static bool lightSourceEnabled = true;
+	static vec4 wireframeLineColor = vec4(1.0f);
 
 	ImGui::Begin("Model Renderer");
 
-	if (ImGui::CollapsingHeader("Configuration"))
+	ImGui::Checkbox("Wireframe Enabled", &wireframeEnabled);
+	ImGui::Checkbox("Light Source Enabled", &lightSourceEnabled);
+
+	if (wireframeEnabled)
 	{
-		for (uint i=0;i<groups.size();i++)
+		if (ImGui::CollapsingHeader("Wireframe"))
+		{
+			ImGui::ColorEdit4("Line Color", (float*)&wireframeLineColor, ImGuiColorEditFlags_AlphaBar);
+		}
+	}
+
+	if (ImGui::CollapsingHeader("Groups"))
+	{
+		for (uint i = 0; i < groups.size(); i++)
 		{
 			bool checked = groupEnabled.at(i);
 			ImGui::Checkbox(groups.at(i).name.c_str(), &checked);
@@ -115,7 +102,15 @@ void ModelRenderer::display()
 
 	ImGui::End();
 
+	vec4 worldLightPosition = inverse(viewer()->lightTransform()*viewer()->modelTransform())*vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
+	shaderProgramModelBase->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix);
+	shaderProgramModelBase->setUniform("viewportSize", viewportSize);
+	shaderProgramModelBase->setUniform("wireframeEnabled", wireframeEnabled);
+	shaderProgramModelBase->setUniform("wireframeLineColor", wireframeLineColor);
+	shaderProgramModelBase->setUniform("worldLightPosition", vec3(worldLightPosition));
+
+	shaderProgramModelBase->use();
 
 	for (uint i = 0; i < groups.size(); i++)
 	{
@@ -124,15 +119,14 @@ void ModelRenderer::display()
 		{
 			const Material & material = materials.at(groups.at(i).materialIndex);
 
-			m_programBase->setUniform("diffuseColor", material.diffuse);
+			shaderProgramModelBase->setUniform("diffuseColor", material.diffuse);
 
 			if (material.diffuseTexture)
 			{
-				m_programBase->setUniform("diffuseTexture", 0);
+				shaderProgramModelBase->setUniform("diffuseTexture", 0);
 				material.diffuseTexture->bindActive(0);
 			}
 
-			//			std::cout << groups.at(i).name << std::endl;
 			viewer()->scene()->model()->vertexArray().drawElements(GL_TRIANGLES, groups.at(i).count(), GL_UNSIGNED_INT, (void*)(sizeof(GLuint)*groups.at(i).startIndex));
 
 			if (material.diffuseTexture)
@@ -142,12 +136,30 @@ void ModelRenderer::display()
 		}
 	}
 
-
-
-	//m_vao->drawElements(GL_TRIANGLES, viewer()->scene()->model()->indices().size(), GL_UNSIGNED_INT);
-	m_programBase->release();
+	shaderProgramModelBase->release();
 
 	viewer()->scene()->model()->vertexArray().unbind();
+
+
+	if (lightSourceEnabled)
+	{
+		auto shaderProgramModelLight = shaderProgram("model-light");
+		shaderProgramModelLight->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix * inverseModelLightMatrix);
+
+		glEnable(GL_POINT_SPRITE);
+		glEnable(GL_PROGRAM_POINT_SIZE);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDepthMask(GL_FALSE);
+
+		m_lightArray->bind();
+
+		shaderProgramModelLight->use();
+		m_lightArray->drawArrays(GL_POINTS, 0, 1);
+		shaderProgramModelLight->release();
+
+		m_lightArray->unbind();
+	}
 
 	// Restore OpenGL state
 	currentState->apply();

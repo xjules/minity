@@ -249,9 +249,19 @@ void Viewer::setProjectionTransform(const glm::mat4& m)
 	m_projectionTransform = m;
 }
 
+void Viewer::setLightTransform(const glm::mat4& m)
+{
+	m_lightTransform = m;
+}
+
 mat4 Viewer::projectionTransform() const
 {
 	return m_projectionTransform;
+}
+
+mat4 Viewer::lightTransform() const
+{
+	return m_lightTransform;
 }
 
 mat4 Viewer::modelViewTransform() const
@@ -264,34 +274,14 @@ mat4 Viewer::modelViewProjectionTransform() const
 	return projectionTransform()*modelViewTransform();
 }
 
-void Viewer::setViewLightPosition(const glm::vec4& p)
+mat4 Viewer::modelLightTransform() const
 {
-	m_viewLightPosition = p;
+	return lightTransform()*modelTransform();
 }
 
-vec4 Viewer::viewLightPosition() const
+mat4 Viewer::modelLightProjectionTransform() const
 {
-	return m_viewLightPosition;
-}
-
-vec4 Viewer::worldLightPosition() const
-{
-	vec4 center = viewTransform() * vec4(0.0f, 0.0f, 0.0f, 1.0);
-	vec4 corner = viewTransform() * vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	float radius = distance(viewLightPosition(), center);
-	vec3 lightDirection = normalize(viewLightPosition() - center);
-	vec4 lightPosition = center + vec4(lightDirection, 0.0f) * 1.0f;
-
-	mat4 inverseModelViewTransform = inverse(modelViewTransform());
-
-	center = inverseModelViewTransform * center;
-	corner = inverseModelViewTransform * corner;
-	lightPosition = inverseModelViewTransform * lightPosition;
-	lightDirection = normalize(vec3(lightPosition - center));
-	radius = distance(center, corner);
-
-	return center + vec4(lightDirection,0.0f)*radius;
-
+	return projectionTransform()*modelLightTransform();
 }
 
 void Viewer::saveImage(const std::string & filename)
@@ -351,21 +341,13 @@ void Viewer::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 		{
 			for (auto& r : viewer->m_renderers)
 			{
-				std::cout << "Reloading shaders for instance of " << typeid(*r.get()).name() << " ... " << std::endl;
+				globjects::debug() << "Reloading shaders for instance of " << typeid(*r.get()).name() << " ... ";
+				r->reloadShaders();
 
-				for (auto& s : r->shaderFiles())
-				{
-					std::cout << "  " << s->shortInfo() << std::endl;
-					s->reload();
-				}
-				std::cout << r->shaderFiles().size() << " shaders reloaded." << std::endl << std::endl;
-
-				std::cout << "Reloading shaders for viewer << " << std::endl;
+				globjects::debug() << "Reloading shaders for viewer ...";
 				
-					viewer->m_vertexShaderSourceUi->reload();
+				viewer->m_vertexShaderSourceUi->reload();
 				viewer->m_fragmentShaderSourceUi->reload();
-
-				std::cout << "2 shaders reloaded." << std::endl << std::endl;
 
 			}
 		}
@@ -382,9 +364,9 @@ void Viewer::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 				bool enabled = viewer->m_renderers[index]->isEnabled();
 
 				if (enabled)
-					std::cout << "Renderer " << index + 1 << " of type " << typeid(*viewer->m_renderers[index].get()).name() << " is now disabled." << std::endl << std::endl;
+					globjects::debug() << "Renderer " << index + 1 << " of type " << typeid(*viewer->m_renderers[index].get()).name() << " is now disabled.";
 				else
-					std::cout << "Renderer " << index + 1 << " of type " << typeid(*viewer->m_renderers[index].get()).name() << " is now enabled." << std::endl << std::endl;
+					globjects::debug() << "Renderer " << index + 1 << " of type " << typeid(*viewer->m_renderers[index].get()).name() << " is now enabled.";
 
 				viewer->m_renderers[index]->setEnabled(!enabled);
 			}
@@ -455,6 +437,11 @@ void Viewer::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 
 			if (io.WantCaptureMouse)
 				return;
+		}
+
+		for (auto& i : viewer->m_interactors)
+		{
+			i->scrollEvent(xoffset, yoffset);
 		}
 
 		viewer->m_mouseWheel += (float)yoffset; // Use fractional mouse wheel.
@@ -586,7 +573,7 @@ void Viewer::endFrame()
 				break;
 		}
 
-		std::cout << "Saving screenshot to " << filename << " ..." << std::endl;
+		globjects::debug() << "Saving screenshot to " << filename << " ...";
 
 		saveImage(filename);
 		m_saveScreenshot = false;

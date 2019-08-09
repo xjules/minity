@@ -29,31 +29,11 @@ namespace minity
 	public:
 		ModelRenderer(Viewer *viewer);
 		virtual void display();
-		virtual std::list<globjects::File*> shaderFiles() const;
 
 	private:
 
-
-		std::unique_ptr<globjects::StaticStringSource> m_shaderSourceDefines = nullptr;
-		std::unique_ptr<globjects::NamedString> m_shaderDefines = nullptr;
-
-		std::unique_ptr<globjects::File> m_shaderSourceGlobals = nullptr;
-		std::unique_ptr<globjects::NamedString> m_shaderGlobals = nullptr;
-
-		std::unique_ptr<globjects::File> m_vertexShaderSourceBase = nullptr;
-		std::unique_ptr<globjects::AbstractStringSource> m_vertexShaderTemplateBase = nullptr;
-		std::unique_ptr<globjects::Shader> m_vertexShaderBase = nullptr;
-
-		std::unique_ptr<globjects::File> m_geometryShaderSourceBase = nullptr;
-		std::unique_ptr<globjects::AbstractStringSource> m_geometryShaderTemplateBase = nullptr;
-		std::unique_ptr<globjects::Shader> m_geometryShaderBase = nullptr;
-
-		std::unique_ptr<globjects::File> m_fragmentShaderSourceBase = nullptr;
-		std::unique_ptr<globjects::AbstractStringSource> m_fragmentShaderTemplateBase = nullptr;
-		std::unique_ptr<globjects::Shader> m_fragmentShaderBase = nullptr;
-
-		std::unique_ptr<globjects::Program> m_programBase = std::make_unique<globjects::Program>();
-		
+		std::unique_ptr<globjects::VertexArray> m_lightArray = std::make_unique<globjects::VertexArray>();
+		std::unique_ptr<globjects::Buffer> m_lightVertices = std::make_unique<globjects::Buffer>();
 	};
 
 }
