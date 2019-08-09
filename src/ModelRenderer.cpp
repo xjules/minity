@@ -33,7 +33,8 @@ ModelRenderer::ModelRenderer(Viewer* viewer) : Renderer(viewer)
 		{ GL_VERTEX_SHADER,"./res/model/model-base-vs.glsl" },
 		{ GL_GEOMETRY_SHADER,"./res/model/model-base-gs.glsl" },
 		{ GL_FRAGMENT_SHADER,"./res/model/model-base-fs.glsl" },
-		}, { "./res/model/model-globals.glsl" });
+		}, 
+		{ "./res/model/model-globals.glsl" });
 
 	createShaderProgram("model-light", {
 		{ GL_VERTEX_SHADER,"./res/model/model-light-vs.glsl" },
@@ -102,7 +103,7 @@ void ModelRenderer::display()
 
 	ImGui::End();
 
-	vec4 worldLightPosition = inverse(viewer()->lightTransform()*viewer()->modelTransform())*vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec4 worldLightPosition = inverseModelLightMatrix*vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	shaderProgramModelBase->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix);
 	shaderProgramModelBase->setUniform("viewportSize", viewportSize);
