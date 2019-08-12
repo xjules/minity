@@ -42,7 +42,11 @@ namespace minity
 		glm::vec3 specular = glm::vec3(0.0f);
 		float shininess = 0.0f;
 
+		std::shared_ptr<globjects::Texture> ambientTexture;
 		std::shared_ptr<globjects::Texture> diffuseTexture;
+		std::shared_ptr<globjects::Texture> specularTexture;
+		std::shared_ptr<globjects::Texture> shininessTexture;
+		std::shared_ptr<globjects::Texture> bumpTexture;
 	};
 
 	class Model
