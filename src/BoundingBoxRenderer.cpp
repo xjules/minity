@@ -90,11 +90,18 @@ void BoundingBoxRenderer::display()
 
 	mat4 modelViewTransform = viewer()->modelViewTransform() * boundingBoxTransform;
 
+	static vec3 lineColor = vec3(0.5f, 0.5f, 0.5f);
+
+	if (ImGui::BeginMenu("Bounding Box"))
+	{
+		ImGui::ColorEdit3("Line Color", (float*) &lineColor);
+		ImGui::EndMenu();
+	}
+
 	auto program = shaderProgram("boundingbox");
 	program->setUniform("projection", viewer()->projectionTransform());
 	program->setUniform("modelView", modelViewTransform);
-
-
+	program->setUniform("lineColor", lineColor);
 
 	m_vao->bind();
 	glPatchParameteri(GL_PATCH_VERTICES, 4);

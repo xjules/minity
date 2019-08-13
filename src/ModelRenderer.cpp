@@ -77,45 +77,47 @@ void ModelRenderer::display()
 	static bool lightSourceEnabled = true;
 	static vec4 wireframeLineColor = vec4(1.0f);
 
-	ImGui::Begin("Model Renderer");
-
-	ImGui::Checkbox("Wireframe Enabled", &wireframeEnabled);
-	ImGui::Checkbox("Light Source Enabled", &lightSourceEnabled);
-
-	if (wireframeEnabled)
+	if (ImGui::BeginMenu("Model"))
 	{
-		if (ImGui::CollapsingHeader("Wireframe"))
-		{
-			ImGui::ColorEdit4("Line Color", (float*)&wireframeLineColor, ImGuiColorEditFlags_AlphaBar);
-		}
-	}
+		ImGui::Checkbox("Wireframe Enabled", &wireframeEnabled);
+		ImGui::Checkbox("Light Source Enabled", &lightSourceEnabled);
 
-	if (ImGui::CollapsingHeader("Groups"))
-	{
-		for (uint i = 0; i < groups.size(); i++)
+		if (wireframeEnabled)
 		{
-			bool checked = groupEnabled.at(i);
-			ImGui::Checkbox(groups.at(i).name.c_str(), &checked);
-			groupEnabled[i] = checked;
+			if (ImGui::CollapsingHeader("Wireframe"))
+			{
+				ImGui::ColorEdit4("Line Color", (float*)&wireframeLineColor, ImGuiColorEditFlags_AlphaBar);
+			}
 		}
 
+		if (ImGui::CollapsingHeader("Groups"))
+		{
+			for (uint i = 0; i < groups.size(); i++)
+			{
+				bool checked = groupEnabled.at(i);
+				ImGui::Checkbox(groups.at(i).name.c_str(), &checked);
+				groupEnabled[i] = checked;
+			}
+
+		}
+
+		ImGui::EndMenu();
 	}
 
-	ImGui::End();
-
-	vec4 worldLightPosition = inverseModelLightMatrix*vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec4 worldCameraPosition = inverseModelViewMatrix * vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec4 worldLightPosition = inverseModelLightMatrix * vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	shaderProgramModelBase->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix);
 	shaderProgramModelBase->setUniform("viewportSize", viewportSize);
+	shaderProgramModelBase->setUniform("worldCameraPosition", vec3(worldCameraPosition));
+	shaderProgramModelBase->setUniform("worldLightPosition", vec3(worldLightPosition));
 	shaderProgramModelBase->setUniform("wireframeEnabled", wireframeEnabled);
 	shaderProgramModelBase->setUniform("wireframeLineColor", wireframeLineColor);
-	shaderProgramModelBase->setUniform("worldLightPosition", vec3(worldLightPosition));
-
+	
 	shaderProgramModelBase->use();
 
 	for (uint i = 0; i < groups.size(); i++)
 	{
-
 		if (groupEnabled.at(i))
 		{
 			const Material & material = materials.at(groups.at(i).materialIndex);

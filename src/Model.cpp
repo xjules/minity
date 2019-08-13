@@ -159,9 +159,11 @@ public:
 
 		ObjGroup defaultGroup;
 		defaultGroup.name = "default";
+		defaultGroup.material = currentMaterial;
 		groupList.push_back(defaultGroup);
 		groupIterator = groupList.end();
 		groupIterator--;
+		groupMap[defaultGroup.name] = groupIterator;
 
 		std::string buffer;
 
@@ -206,15 +208,33 @@ public:
 					// mtllib
 					case 'm':
 					{
+						// the Wavefront obj specification does not really allow for spaces in the mtl file name,
+						// since multiple libraries are supposed to be separated by spaces, but many programs
+						// do not take care of that -- therefore, we first try whether it is a single filename,
+						// and only if that fails we use the interpretation according to the specification
 						std::string libraryName;
 
-						while (iss >> libraryName)
+						if (getline(iss, libraryName))
 						{
 							libraryName = trim(libraryName);
-							std::filesystem::path libraryPath = path.parent_path();
-							libraryPath.append(libraryName);
+							std::filesystem::path libraryPath = libraryName;
 
-							loadMtlFile(libraryPath.string(), materials, materialMap);
+							// first try
+							if (libraryPath.is_absolute())
+							{
+								if (loadMtlFile(libraryPath.string(), materials, materialMap))
+									break;
+							}
+
+							std::stringstream mss(libraryName);
+
+							while (mss >> libraryName)
+							{
+								libraryName = trim(libraryName);
+								std::filesystem::path libraryPath = path.parent_path();
+								libraryPath.append(libraryName);
+								loadMtlFile(libraryPath.string(), materials, materialMap);
+							}
 						}
 					}
 					break;
@@ -224,7 +244,7 @@ public:
 					{
 						std::string materialName;
 
-						if (iss >> materialName)
+						if (getline(iss, materialName))
 						{
 							materialName = trim(materialName);
 							currentMaterial = materialName;
@@ -581,36 +601,66 @@ public:
 
 			if (!m.map_Ka.empty())
 			{
-				std::filesystem::path texturePath = path.parent_path();
-				texturePath.append(m.map_Ka);
+				std::filesystem::path texturePath = m.map_Ka;
+
+				if (!texturePath.is_absolute())
+				{
+					texturePath = path.parent_path();
+					texturePath.append(m.map_Ka);
+				}
+
 				newMaterial.ambientTexture = std::move(loadTexture(texturePath.string()));
 			}
 
 			if (!m.map_Kd.empty())
 			{
-				std::filesystem::path texturePath = path.parent_path();
-				texturePath.append(m.map_Kd);
+				std::filesystem::path texturePath = m.map_Kd;
+
+				if (!texturePath.is_absolute())
+				{
+					texturePath = path.parent_path();
+					texturePath.append(m.map_Kd);
+				}
+
 				newMaterial.diffuseTexture = std::move(loadTexture(texturePath.string()));
 			}
 
 			if (!m.map_Ks.empty())
 			{
-				std::filesystem::path texturePath = path.parent_path();
-				texturePath.append(m.map_Ks);
+				std::filesystem::path texturePath = m.map_Ks;
+
+				if (!texturePath.is_absolute())
+				{
+					texturePath = path.parent_path();
+					texturePath.append(m.map_Ks);
+				}
+
 				newMaterial.specularTexture = std::move(loadTexture(texturePath.string()));
 			}
 
 			if (!m.map_Ns.empty())
 			{
-				std::filesystem::path texturePath = path.parent_path();
-				texturePath.append(m.map_Ns);
+				std::filesystem::path texturePath = m.map_Ns;
+
+				if (!texturePath.is_absolute())
+				{
+					texturePath = path.parent_path();
+					texturePath.append(m.map_Ns);
+				}
+
 				newMaterial.shininessTexture = std::move(loadTexture(texturePath.string()));
 			}
 
 			if (!m.map_bump.empty())
 			{
-				std::filesystem::path texturePath = path.parent_path();
-				texturePath.append(m.map_bump);
+				std::filesystem::path texturePath = m.map_bump;
+
+				if (!texturePath.is_absolute())
+				{
+					texturePath = path.parent_path();
+					texturePath.append(m.map_bump);
+				}
+
 				newMaterial.bumpTexture = std::move(loadTexture(texturePath.string()));
 			}
 
@@ -629,6 +679,7 @@ public:
 			return false;
 
 		std::string buffer;
+		int currentMaterialIndex = 0;
 
 		while (is.good())
 		{
@@ -643,15 +694,24 @@ public:
 					{
 						std::string materialName;
 
-						if (iss >> materialName)
+						if (getline(iss, materialName))
 						{
 							materialName = trim(materialName);
 
-							ObjMaterial newMaterial;
-							newMaterial.name = materialName;
-							materialMap.insert(std::make_pair(newMaterial.name, int(materials.size())));
+							auto i = materialMap.find(materialName);
 
-							materials.push_back(newMaterial);
+							if (i == materialMap.end())
+							{
+								ObjMaterial newMaterial;
+								newMaterial.name = materialName;
+								currentMaterialIndex = materials.size();
+								materialMap.insert(std::make_pair(newMaterial.name, currentMaterialIndex));
+								materials.push_back(newMaterial);
+							}
+							else
+							{
+								currentMaterialIndex = i->second;
+							}
 						}
 					}
 					// Ambient Color
@@ -659,91 +719,109 @@ public:
 					{
 						vec3 Ka(0.0f);
 						if (iss >> Ka.x >> Ka.y >> Ka.z)
-							materials.back().Ka = Ka;
+							materials[currentMaterialIndex].Ka = Ka;
 					}
 					// Diffuse Color
 					else if (token == "Kd")
 					{
 						vec3 Kd(0.0f);
 						if (iss >> Kd.x >> Kd.y >> Kd.z)
-							materials.back().Kd = Kd;
+							materials[currentMaterialIndex].Kd = Kd;
 					}
 					// Specular Color
 					else if (token == "Ks")
 					{
 						vec3 Ks(0.0f);
 						if (iss >> Ks.x >> Ks.y >> Ks.z)
-							materials.back().Ks = Ks;
+							materials[currentMaterialIndex].Ks = Ks;
 					}
 					// Specular Exponent
 					else if (token == "Ns")
 					{
 						float Ns = 0.0f;
 						if (iss >> Ns)
-							materials.back().Ns = Ns;
+							materials[currentMaterialIndex].Ns = Ns;
 					}
 					// Optical Density
 					else if (token == "Ni")
 					{
 						float Ni = 0.0f;
 						if (iss >> Ni)
-							materials.back().Ni = Ni;
+							materials[currentMaterialIndex].Ni = Ni;
 					}
 					// Dissolve
 					else if (token == "d")
 					{
 						float d = 0.0f;
 						if (iss >> d)
-							materials.back().d = d;
+							materials[currentMaterialIndex].d = d;
 					}
 					// Illumination
 					else if (token == "illum")
 					{
 						int illum = 0;
 						if (iss >> illum)
-							materials.back().illum = illum;
+							materials[currentMaterialIndex].illum = illum;
 					}
 					// Ambient Texture Map
 					else if (token == "map_Ka")
 					{
 						std::string map_Ka;
-						if (iss >> map_Ka)
-							materials.back().map_Ka = map_Ka;
+						if (getline(iss, map_Ka))
+						{
+							map_Ka = trim(map_Ka);
+							materials[currentMaterialIndex].map_Ka = map_Ka;
+						}
 					}
 					// Diffuse Texture Map
 					else if (token == "map_Kd")
 					{
 						std::string map_Kd;
-						if (iss >> map_Kd)
-							materials.back().map_Kd = map_Kd;
+						if (getline(iss, map_Kd))
+						{
+							map_Kd = trim(map_Kd);
+							materials[currentMaterialIndex].map_Kd = map_Kd;
+						}
 					}
 					// Specular Texture Map
 					else if (token == "map_Ks")
 					{
 						std::string map_Ks;
-						if (iss >> map_Ks)
-							materials.back().map_Ks = map_Ks;
+						if (getline(iss, map_Ks))
+						{
+							map_Ks = trim(map_Ks);
+							materials[currentMaterialIndex].map_Ks = map_Ks;
+						}
 					}
 					// Specular Hightlight Map
 					else if (token == "map_Ns")
 					{
 						std::string map_Ns;
-						if (iss >> map_Ns)
-							materials.back().map_Ns = map_Ns;
+						if (getline(iss, map_Ns))
+						{
+							map_Ns = trim(map_Ns);
+							materials[currentMaterialIndex].map_Ns = map_Ns;
+						}
 					}
 					// Alpha Texture Map
 					else if (token == "map_d")
 					{
 						std::string map_d;
-						if (iss >> map_d)
-							materials.back().map_d = map_d;
+						if (getline(iss, map_d))
+						{
+							map_d = trim(map_d);
+							materials[currentMaterialIndex].map_d = map_d;
+						}
 					}
 					// Bump Map
 					else if (token == "map_bump" || buffer == "map_Bump" || buffer == "bump")
 					{
 						std::string map_bump;
-						if (iss >> map_bump)
-							materials.back().map_bump = map_bump;
+						if (getline(iss, map_bump))
+						{
+							map_bump = trim(map_bump);
+							materials[currentMaterialIndex].map_bump = map_bump;
+						}
 					}
 				}
 			}

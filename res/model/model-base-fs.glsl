@@ -2,11 +2,12 @@
 #extension GL_ARB_shading_language_include : require
 #include "/model-globals.glsl"
 
+uniform vec3 worldCameraPosition;
+uniform vec3 worldLightPosition;
 uniform vec3 diffuseColor;
 uniform sampler2D diffuseTexture;
 uniform bool wireframeEnabled;
 uniform vec4 wireframeLineColor;
-uniform vec3 worldLightPosition;
 
 in fragmentData
 {
