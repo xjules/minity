@@ -98,17 +98,15 @@ public:
 		// Material Name
 		std::string name;
 		// Ambient Color
-		vec3 Ka = vec3(0.0f);
+		vec3 Ka = vec3(0.2f,0.2f,0.2f);
 		// Diffuse Color
-		vec3 Kd = vec3(0.0f);
+		vec3 Kd = vec3(0.8f,0.8f,0.8f);
 		// Specular Color
-		vec3 Ks = vec3(0.0f);
+		vec3 Ks = vec3(1.0f,1.0f,1.0f);
 		// Specular Exponent
 		float Ns = 0.0f;
-		// Optical Density
-		float Ni = 0.0f;
 		// Dissolve
-		float d = 0.0f;
+		float d = 1.0f;
 		// Illumination
 		int illum = 0;
 		// Ambient Texture Map
@@ -741,13 +739,6 @@ public:
 						float Ns = 0.0f;
 						if (iss >> Ns)
 							materials[currentMaterialIndex].Ns = Ns;
-					}
-					// Optical Density
-					else if (token == "Ni")
-					{
-						float Ni = 0.0f;
-						if (iss >> Ni)
-							materials[currentMaterialIndex].Ni = Ni;
 					}
 					// Dissolve
 					else if (token == "d")
