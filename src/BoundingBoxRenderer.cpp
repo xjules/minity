@@ -112,5 +112,9 @@ void BoundingBoxRenderer::display()
 
 	m_vao->unbind();
 
-	currentState->apply();
+	glDisable(GL_BLEND);
+	glDisable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+	
+	// Restore OpenGL state (disabled to to issues with some Intel drivers)
+	// currentState->apply();
 }

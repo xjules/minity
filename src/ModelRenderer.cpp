@@ -149,7 +149,6 @@ void ModelRenderer::display()
 		auto shaderProgramModelLight = shaderProgram("model-light");
 		shaderProgramModelLight->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix * inverseModelLightMatrix);
 
-		glEnable(GL_POINT_SPRITE);
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -162,8 +161,12 @@ void ModelRenderer::display()
 		shaderProgramModelLight->release();
 
 		m_lightArray->unbind();
+
+		glDisable(GL_PROGRAM_POINT_SIZE);
+		glDisable(GL_BLEND);
+		glDepthMask(GL_TRUE);
 	}
 
-	// Restore OpenGL state
-	currentState->apply();
+	// Restore OpenGL state (disabled to to issues with some Intel drivers)
+	// currentState->apply();
 }
