@@ -215,6 +215,14 @@ void Viewer::keyCallback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (viewer)
 	{
+		if (viewer->m_showUi)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			if (io.WantCaptureKeyboard)
+				return;
+		}
+
 		if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
 		{
 			viewer->m_showUi = !viewer->m_showUi;
@@ -263,6 +271,14 @@ void Viewer::mouseButtonCallback(GLFWwindow* window, int button, int action, int
 
 	if (viewer)
 	{
+		if (viewer->m_showUi)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			if (io.WantCaptureMouse)
+				return;
+		}
+
 		for (auto& i : viewer->m_interactors)
 		{
 			i->mouseButtonEvent(button, action, mods);
@@ -276,6 +292,14 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 	if (viewer)
 	{
+		if (viewer->m_showUi)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			if (io.WantCaptureMouse)
+				return;
+		}
+
 		for (auto& i : viewer->m_interactors)
 		{
 			i->cursorPosEvent(xpos, ypos);
@@ -289,6 +313,14 @@ void Viewer::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 
 	if (viewer)
 	{
+		if (viewer->m_showUi)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			if (io.WantCaptureMouse)
+				return;
+		}
+
 		for (auto& i : viewer->m_interactors)
 		{
 			i->scrollEvent(xoffset, yoffset);
