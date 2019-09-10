@@ -148,6 +148,7 @@ void ModelRenderer::display()
 	{
 		auto shaderProgramModelLight = shaderProgram("model-light");
 		shaderProgramModelLight->setUniform("modelViewProjectionMatrix", modelViewProjectionMatrix * inverseModelLightMatrix);
+		shaderProgramModelLight->setUniform("viewportSize", viewportSize);
 
 		glEnable(GL_PROGRAM_POINT_SIZE);
 		glEnable(GL_BLEND);
