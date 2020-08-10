@@ -9,6 +9,9 @@ cd ext
 
 git clone https://github.com/glfw/glfw.git
 git clone https://github.com/g-truc/glm.git
+cd glm
+git reset --hard 2bd42176855ac34c8f362df5a5cf235db36d27f1
+cd ..
 git clone https://github.com/cginternals/glbinding.git
 git clone https://github.com/cginternals/globjects.git
 
