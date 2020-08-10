@@ -8,6 +8,9 @@ git clone https://github.com/glfw/glfw.git
 
 rd /S /Q glm
 git clone https://github.com/g-truc/glm.git
+cd glm
+git reset --hard 2bd42176855ac34c8f362df5a5cf235db36d27f1
+cd ..
 
 rd /S /Q glbinding
 git clone https://github.com/cginternals/glbinding.git
