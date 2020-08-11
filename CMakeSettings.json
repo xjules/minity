@@ -1,11 +1,11 @@
 ﻿{
   "configurations": [
     {
-      "name": "Debug",
-      "generator": "Visual Studio 16 2019 Win64",
-      "configurationType": "Debug",
-      "buildRoot": "${projectDir}\\build\\Debug",
-      "installRoot": "${projectDir}\\install\\Debug",
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "RelWithDebInfo",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
@@ -13,11 +13,11 @@
       "variables": []
     },
     {
-      "name": "Release",
-      "generator": "Visual Studio 16 2019 Win64",
-      "configurationType": "Release",
-      "buildRoot": "${projectDir}\\build\\Release",
-      "installRoot": "${projectDir}\\install\\Release",
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
