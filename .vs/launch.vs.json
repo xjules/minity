@@ -4,10 +4,15 @@
   "configurations": [
     {
       "type": "default",
-      "project": "CMakeLists.txt",
-      "name": "minity.exe",
-      "currentDir": "${projectDir}",
-      "program": "${command:cmake.launchTargetPath}"
+      "project": "bin\\Debug\\minity.exe",
+      "name": "minity.exe (Debug)",
+      "currentDir": "${workspaceRoot}"
     },
+    {
+      "type": "default",
+      "project": "bin\\Release\\minity.exe",
+      "name": "minity.exe (Release)",
+      "currentDir": "${workspaceRoot}"
+    }
   ]
 }
