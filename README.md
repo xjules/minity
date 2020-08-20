@@ -3,7 +3,7 @@
 
 ## Getting Started
 
-minity was developed under Windows using Microsoft Visual Studio 2017. It uses [CMake](https://cmake.org/) as its build system and does not contain anything else platform-specific, so it should in principle work using other compilers and operating systems, but this has not been tested. Should there be any issues, we are grateful for any input that helps us make the software work on as many platforms as possible.
+minity was developed under Windows using Microsoft Visual Studio 2019. It uses [CMake](https://cmake.org/) as its build system and does not contain anything else platform-specific, so it should in principle work using other compilers and operating systems, but this has not been tested. Should there be any issues, we are grateful for any input that helps us make the software work on as many platforms as possible.
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ The other libraries use CMake, so just follow their respective instructions and 
 
 ## Building
 
-If you are using Visual Studio 2017, you can use its integrated CMake support to build and run the project. When running the program from within the IDE, make sure so select "dynamol.exe" as the Startup Item. This will make sure that the current working directory is set to the project root (see the ```./.vs/launch.vs.json file```), so that all resources can be found by the executable.
+If you are using Visual Studio 2019, you can use its integrated CMake support to build and run the project. When running the program from within the IDE, make sure the current working directory is set to the project root in ```./.vs/launch.vs.json``` file by including ```"currentDir": "${projectDir}“```, so that all resources can be found by the executable.
 
 When instead building from the command line, run the following commands from the project root folder:
 
@@ -71,7 +71,7 @@ After building, the executables will be available in the ```./bin/Debug``` and `
 
 ## Running
 
-As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./dynamol-debug.cmd``` and ```./dynamol-release.cmd``` scripts in the project root folder to run the software.
+As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./minity-debug.cmd``` and ```./minity-release.cmd``` scripts in the project root folder to run the software.
 
 ## Usage
 
