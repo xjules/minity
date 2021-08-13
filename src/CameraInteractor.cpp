@@ -296,7 +296,7 @@ void CameraInteractor::display()
 
 void CameraInteractor::resetProjectionTransform()
 {
-	vec2 viewportSize = viewer()->viewportSize();
+	ivec2 viewportSize = viewer()->viewportSize();
 	framebufferSizeEvent(viewportSize.x, viewportSize.y);
 }
 
