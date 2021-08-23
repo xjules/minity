@@ -1,9 +1,9 @@
-# minity - A minimal grpahics engine
+# minity - A minimal graphics engine
 
 
 ## Getting Started
 
-minity was developed under Windows using Microsoft Visual Studio 2019. It uses [CMake](https://cmake.org/) as its build system and does not contain anything else platform-specific, so it should in principle work using other compilers and operating systems, but this has not been tested. Should there be any issues, we are grateful for any input that helps us make the software work on as many platforms as possible.
+Minity was developed under Windows using Microsoft Visual Studio 2019. It uses [CMake](https://cmake.org/) as its build system and does not contain anything else platform-specific, so it should in principle work using other compilers and operating systems, but this has not been tested. Should there be any issues, we are grateful for any input that helps us make the software work on as many platforms as possible.
 
 ## Prerequisites
 
@@ -71,7 +71,7 @@ After building, the executables will be available in the ```./bin/Debug``` and `
 
 ## Running
 
-As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./minity-debug.cmd``` and ```./minity-release.cmd``` scripts in the project root folder to run the software.
+As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./minity.cmd``` script in the project root folder to run the software.
 
 ## Usage
 
