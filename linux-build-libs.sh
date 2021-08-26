@@ -55,9 +55,5 @@ do
     echo "Done."
 done
 
-
-echo "Removing installation files."
-cd $PROJECT_HOME
-rm -rf ext
 echo "Done."
 

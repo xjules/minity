@@ -17,13 +17,16 @@ The project uses [CMake](https://cmake.org/) and relies on the following librari
 - [tinyfiledialogs](https://sourceforge.net/projects/tinyfiledialogs/) 3.3.9 or higher (https://git.code.sf.net/p/tinyfiledialogs/code) for dialog functionality
 - [stb](https://github.com/nothings/stb/) (stb_image.h 2.22 or higher and stb_image_write.h 1.13 or higher) or higher (https://github.com/nothings/stb.git) for image loading and saving
 
-The release package includes all these libraries in compiled form (where applicable), so if you are using it you can skip the remainder of the section. If you want or need to compile the dependencies yourself, on Windows we provide a set of batch scripts to simplify the process of retrieving and building them. These scripts require that the Git and CMake executables properly set up and in your system path.
+The release package includes all these libraries in compiled form (where applicable), so if you are using it you can skip the remainder of the section.
+
+### Windows
+If you want or need to compile the dependencies yourself, on Windows we provide a set of batch scripts to simplify the process of retrieving and building them. These scripts require that the Git and CMake executables properly set up and in your system path.
 
 - ```./fetch-libs.cmd``` retrieves the libraries from their respective git repositories.  
 - ```./build-libs.cmd``` builds them and installs them into the ```./lib``` folder.  
 - ```./copy-libs.cmd``` copies DLLs required for execution into the ```./bin/Debug``` and ```./bin/Release``` folders. 
 
-Under Windows, after opening a command prompt and running these three scripts from the project root folder, all dependencies should be available in the ```./lib``` folder.
+After opening a command prompt and running these three scripts from the project root folder, all dependencies should be available in the ```./lib``` folder.
 
 ```
 ./fetch-libs.cmd
@@ -42,6 +45,30 @@ cd ..
 ```
 
 The other libraries use CMake, so just follow their respective instructions and make sure that your CMake installation can find them.
+
+## Linux
+We also provide a set of similar scripts for linux-based distributions:
+ - `./linux-fetch-libs.sh` retrieves the libraries from their respective git repositories
+ - `./linux-build-libs.sh` builds them and installs them into the `./lib` folder 
+
+[GLFW](https://www.glfw.org/) also requires a few dependencies, which can be met using:
+```
+sudo apt install libxss-dev libxxf86vm-dev libxkbfile-dev libxv-dev
+sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
+```
+
+First fetch all the required libraries manually or using the `./linux-fetch-libs.sh` script (requires Git to be installed). If you don't have a C++ compiler installed, you can install GCC and a debugger using:
+```
+sudo apt install build-essential gdb
+```
+Before building you might have to specify which C++ compiler you would like to use, which you can do by exporting the CXX variable. 
+
+Example using (GCC's C++ compiler):
+```
+export CXX=g++
+```
+
+Finally, if CMake (version 3.8 or higher) is installed, you can build the libraries by running the `./linux-build-libs.sh` script.
 
 ## Building
 

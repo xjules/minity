@@ -22,7 +22,7 @@ cd ..
 
 git clone https://github.com/cginternals/globjects.git
 cd globjects
-git reset --hard 1b0ec7bedbc7e49cada7d49af401ecf7eff11bb4
+git reset --hard dc68b09a53ec20683d3b3a12ed8d9cb12602bb9a
 cd ..
 
 cd ..
