@@ -100,6 +100,13 @@ After building, the executables will be available in the ```./bin/Debug``` and `
 
 As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./minity-debug.cmd``` and ```./minity-release.cmd``` scripts in the project root folder to run the software.
 
+### Visual Studio Code
+If using Visual Studio Code and the [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) you can setup a debugger by generating any default launch config (by pressing the debug button) and changing the `program` variable to the macro:
+```json
+"program": "${command:cmake.launchTargetPath}"
+```
+**Windows**: The default behavior of the extension is to put built binaries in an additional target folder, so if running on Windows you will have to move the dll-files into `./bin/Debug` and `./bin/Release`.
+
 ## Usage
 
 After starting the program, a file dialog will pop up and ask you for a Wavefront OBJ File file. Some basic usage instructions are displayed in the console window.
