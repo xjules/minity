@@ -452,3 +452,22 @@ void Viewer::mainMenu()
 		ImGui::EndMenu();
 	}
 }
+
+namespace minity
+{
+	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale)
+	{
+		translation = glm::vec3{matrix[3]};
+		glm::mat3 inner = glm::mat3{matrix};
+		
+		scale.x = glm::length(inner[0]);
+		scale.y = glm::length(inner[1]);
+		scale.z = glm::length(inner[2]);
+		
+		inner[0] /= scale.x;
+		inner[1] /= scale.y;
+		inner[2] /= scale.z;
+
+		rotation = glm::mat4{inner};
+	}
+}

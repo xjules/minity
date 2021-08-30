@@ -14,7 +14,6 @@
 
 namespace minity
 {
-
 	class Viewer
 	{
 	public:
@@ -78,5 +77,14 @@ namespace minity
 		bool m_saveScreenshot = false;
 	};
 
-
+	/**
+	 * @brief Performs standard decomposition of a transformation matrix into translation, rotation and scale parts respectively.
+	 * Note: The out rotation is an affine space rotation matrix, meaning only the inner 3x3 part affects rotation and the rest is the identity matrix.
+	 * @see https://math.stackexchange.com/questions/237369/given-this-transformation-matrix-how-do-i-decompose-it-into-translation-rotati
+	 * @param matrix The matrix to decompose
+	 * @param translation Out parameter for translation
+	 * @param rotation Out parameter for rotation
+	 * @param scale Out parameter for scale
+	 */
+	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale);
 }
