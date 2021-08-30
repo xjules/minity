@@ -51,11 +51,7 @@ We also provide a set of similar scripts for linux-based distributions:
  - `./linux-fetch-libs.sh` retrieves the libraries from their respective git repositories
  - `./linux-build-libs.sh` builds them and installs them into the `./lib` folder 
 
-[GLFW](https://www.glfw.org/) also requires a few dependencies, which can be met using:
-```
-sudo apt install libxss-dev libxxf86vm-dev libxkbfile-dev libxv-dev
-sudo apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev
-```
+[GLFW](https://www.glfw.org/) also requires a few dependencies. [See their documentation](https://www.glfw.org/docs/3.3/compile.html#compile_deps) for how to install the dependencies for the respective platform.
 
 First fetch all the required libraries manually or using the `./linux-fetch-libs.sh` script (requires Git to be installed). If you don't have a C++ compiler installed, you can install GCC and a debugger using:
 ```
