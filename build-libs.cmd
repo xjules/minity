@@ -18,6 +18,11 @@ md build
 cd build
 cmake .. -DCMAKE_CXX_FLAGS=/D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DCMAKE_INSTALL_PREFIX="%LIBRARY_DIRECTORY%/%1" -DCMAKE_PREFIX_PATH="%DEPENDENCIES%" -DCMAKE_DEBUG_POSTFIX=d -DGLM_TEST_ENABLE=OFF -DGLFW_BUILD_TESTS=OFF -DOPTION_BUILD_TESTS=OFF -DOPTION_BUILD_EXAMPLES=OFF -DOPTION_BUILD_DOCS=OFF
 
+rem Abort script on cmake errors:
+IF %ERRORLEVEL% NEQ 0 ( 
+   exit 1
+)
+
 cmake --build . --config Debug --target install
 cmake --build . --config Release --target install
 

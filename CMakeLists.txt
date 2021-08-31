@@ -8,7 +8,9 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   SET(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/bin" CACHE PATH "Setting the install directory to ./bin" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-set(MSVC_COMPILE_FLAGS "/experimental:external /external:anglebrackets /external:W0")
+if(MSVC)
+  set(MSVC_COMPILE_FLAGS "/experimental:external /external:anglebrackets /external:W0")
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MSVC_COMPILE_FLAGS}")
