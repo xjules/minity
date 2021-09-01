@@ -92,28 +92,31 @@ int main(int argc, char *argv[])
 		if (openfileName)
 			fileName = std::string(openfileName);
 	}
-	
-	auto scene = std::make_unique<Scene>();
-	scene->model()->load(fileName);
-	auto viewer = std::make_unique<Viewer>(window, scene.get());
 
-	// Scaling the model's bounding box to the canonical view volume
-	vec3 boundingBoxSize = scene->model()->maximumBounds() - scene->model()->minimumBounds();
-	float maximumSize = std::max( std::max(boundingBoxSize.x, boundingBoxSize.y), boundingBoxSize.z );
-	mat4 modelTransform =  scale(vec3(2.0f) / vec3(maximumSize)); 
-	modelTransform = modelTransform * translate(-0.5f*(scene->model()->minimumBounds() + scene->model()->maximumBounds()));
-	viewer->setModelTransform(modelTransform);
-
-
-	glfwSwapInterval(0);
-
-	// Main loop
-	while (!glfwWindowShouldClose(window))
 	{
-		glfwPollEvents();
-		viewer->display();
-		//glFinish();
-		glfwSwapBuffers(window);
+		auto scene = std::make_unique<Scene>();
+		scene->model()->load(fileName);
+		auto viewer = std::make_unique<Viewer>(window, scene.get());
+
+		// Scaling the model's bounding box to the canonical view volume
+		vec3 boundingBoxSize = scene->model()->maximumBounds() - scene->model()->minimumBounds();
+		float maximumSize = std::max( std::max(boundingBoxSize.x, boundingBoxSize.y), boundingBoxSize.z );
+		mat4 modelTransform =  scale(vec3(2.0f) / vec3(maximumSize)); 
+		modelTransform = modelTransform * translate(-0.5f*(scene->model()->minimumBounds() + scene->model()->maximumBounds()));
+		viewer->setModelTransform(modelTransform);
+
+
+		glfwSwapInterval(0);
+
+		// Main loop
+		while (!glfwWindowShouldClose(window))
+		{
+			glfwPollEvents();
+			viewer->display();
+			//glFinish();
+			glfwSwapBuffers(window);
+		}
+
 	}
 
 	// Destroy window

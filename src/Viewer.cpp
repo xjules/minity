@@ -71,6 +71,7 @@ Viewer::Viewer(GLFWwindow *window, Scene *scene) : m_window(window), m_scene(sce
 Viewer::~Viewer()
 {
 	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
