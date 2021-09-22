@@ -103,6 +103,9 @@ If using Visual Studio Code and the [CMake Tools extension](https://marketplace.
 ```
 **Windows**: The default behavior of the extension is to put built binaries in an additional target folder, so if running on Windows you will have to move the dll-files into `./bin/Debug` and `./bin/Release`.
 
+### CLion
+CLion has arguably the easiest setup for CMake based projects like Minity, so you don't have to do much here. When running the program however, CMake might fail to set the correct working directory which may gives errors like "failed to locate font" or "failed to load shader" in the console. To fix these errors, go to *Run* -> *Configurations* and set the working directory to the top folder. If the project folder is the same as the repository folder, you can simply use the `$ProjectFileDir$` macro.
+
 ## Usage
 
 After starting the program, a file dialog will pop up and ask you for a Wavefront OBJ File file. Some basic usage instructions are displayed in the console window.
