@@ -46,7 +46,7 @@ cd ..
 
 The other libraries use CMake, so just follow their respective instructions and make sure that your CMake installation can find them.
 
-## Linux
+### Linux
 We also provide a set of similar scripts for linux-based distributions:
  - `./linux-fetch-libs.sh` retrieves the libraries from their respective git repositories
  - `./linux-build-libs.sh` builds them and installs them into the `./lib` folder 
@@ -67,10 +67,7 @@ export CXX=g++
 Finally, if CMake (version 3.8 or higher) is installed, you can build the libraries by running the `./linux-build-libs.sh` script.
 
 ## Building
-
-If you are using Visual Studio 2019, you can use its integrated CMake support to build and run the project. When running the program from within the IDE, make sure the current working directory is set to the project root in ```./.vs/launch.vs.json``` file by including ```"currentDir": "${projectDir}“```, so that all resources can be found by the executable.
-
-When instead building from the command line, run the following commands from the project root folder:
+If building from the command line, run the following commands from the project root folder to setup the CMake configurations:
 
 ```
 mkdir build
@@ -94,7 +91,10 @@ After building, the executables will be available in the ```./bin/Debug``` and `
 
 ## Running
 
-As mentioned above, the program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside the IDE, you can use the ```./minity.cmd``` script in the project root folder to run the software.
+The program requires that the current working directory is set to the project root folder. On Windows, the program further assumes that the DLLs for glfw, glbinding, and globjects are located in the same folder as the executable (or, alternatively, are in the system path). If you followed the steps above, this should already be the case. Otherwise, you can run the copy-libs.cmd script to copy them over from the ```./lib``` folder. When running the program from outside an IDE, you can use the ```./minity.cmd``` script in the project root folder to run the software from the top directory.
+
+### Visual Studio
+If you are using Visual Studio 2019, you can use its integrated CMake support to build and run the project. When running the program from within the IDE, make sure the current working directory is set to the project root in ```./.vs/launch.vs.json``` file by including ```"currentDir": "${projectDir}“```, so that all resources can be found by the executable.
 
 ### Visual Studio Code
 If using Visual Studio Code and the [CMake Tools extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools) you can setup a debugger by generating any default launch config (by pressing the debug button) and changing the `program` variable to the macro:
@@ -102,6 +102,9 @@ If using Visual Studio Code and the [CMake Tools extension](https://marketplace.
 "program": "${command:cmake.launchTargetPath}"
 ```
 **Windows**: The default behavior of the extension is to put built binaries in an additional target folder, so if running on Windows you will have to move the dll-files into `./bin/Debug` and `./bin/Release`.
+
+### CLion
+CLion has arguably the easiest setup for CMake based projects like Minity, so you don't have to do much here. When running the program however, CMake might fail to set the correct working directory which may gives errors like "failed to locate font" or "failed to load shader" in the console. To fix these errors, go to *Run* -> *Configurations* and set the working directory to the top folder. If the project folder is the same as the repository folder, you can simply use the `$ProjectFileDir$` macro.
 
 ## Usage
 
