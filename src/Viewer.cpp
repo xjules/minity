@@ -200,6 +200,9 @@ void Viewer::saveImage(const std::string & filename)
 
 void Viewer::framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
+	if (width < 1 || height < 1)
+		return;
+
 	Viewer* viewer = static_cast<Viewer*>(glfwGetWindowUserPointer(window));
 
 	if (viewer)
