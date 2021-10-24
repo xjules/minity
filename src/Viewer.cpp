@@ -459,7 +459,7 @@ void Viewer::mainMenu()
 
 namespace minity
 {
-	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale)
+	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale, bool preMultipliedRotation)
 	{
 		translation = glm::vec3{matrix[3]};
 		glm::mat3 inner = glm::mat3{matrix};
@@ -473,5 +473,8 @@ namespace minity
 		inner[2] /= scale.z;
 
 		rotation = glm::mat4{inner};
+
+		if (preMultipliedRotation)
+			translation = glm::inverse(inner) * translation;
 	}
 }

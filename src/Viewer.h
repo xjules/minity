@@ -85,6 +85,7 @@ namespace minity
 	 * @param translation Out parameter for translation
 	 * @param rotation Out parameter for rotation
 	 * @param scale Out parameter for scale
+	 * @param preMultipliedRotation If true, this will transform the translation with the inverse rotation. You can use this if the translation in the matrix is rotated (as is often the case for view matrices).
 	 */
-	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale);
+	void matrixDecompose(const glm::mat4& matrix, glm::vec3& translation, glm::mat4& rotation, glm::vec3& scale, bool preMultipliedRotation = false);
 }
