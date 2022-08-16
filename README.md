@@ -17,7 +17,13 @@ The project uses [CMake](https://cmake.org/) and relies on the following librari
 - [tinyfiledialogs](https://sourceforge.net/projects/tinyfiledialogs/) 3.3.9 or higher (https://git.code.sf.net/p/tinyfiledialogs/code) for dialog functionality
 - [stb](https://github.com/nothings/stb/) (stb_image.h 2.22 or higher and stb_image_write.h 1.13 or higher) or higher (https://github.com/nothings/stb.git) for image loading and saving
 
-The project uses vcpkg (https://vcpkg.io) for dependency management, so this should take care of everything. There is a manifest file called ```vcpkg.json``` in the project root folder. When building with CMake for the first time, all dependencies should be downloaded and installed automatically.
+The project uses vcpkg (https://vcpkg.io) for dependency management, so this should take care of everything. Please follow the instructions on the vcpkg website (https://vcpkg.io/en/getting-started.html) to set it up for your environment. When using visual studio, make sure to install the vcpkg integration using
+
+```
+vcpkg integrate install
+```
+
+There is a manifest file called ```vcpkg.json``` in the project root folder. When building with CMake for the first time, all dependencies should be downloaded and installed automatically.
 
 ## Building
 
