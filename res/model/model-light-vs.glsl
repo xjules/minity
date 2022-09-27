@@ -5,7 +5,7 @@
 uniform mat4 modelViewProjectionMatrix;
 uniform vec2 viewportSize;
 
-in vec3 position;
+layout (location = 0) in vec3 position;
 flat out vec2 pointCenter;
 flat out float pointSize;
 

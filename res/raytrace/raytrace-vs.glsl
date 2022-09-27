@@ -2,7 +2,7 @@
 #extension GL_ARB_shading_language_include : require
 #include "/raytrace-globals.glsl"
 
-in vec2 position;
+layout (location = 0) in vec2 position;
 out vec2 fragPosition;
 
 out vec2 pp;
