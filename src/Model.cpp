@@ -805,7 +805,7 @@ public:
 						}
 					}
 					// Bump Map
-					else if (token == "map_bump" || buffer == "map_Bump" || buffer == "bump")
+					else if (token == "map_bump" || token == "map_Bump" || token == "bump")
 					{
 						std::string map_bump;
 						if (getline(iss, map_bump))
