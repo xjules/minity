@@ -10,7 +10,7 @@
 #include <limits>
 #include <unordered_map>
 #include <array>
-#include <algorithm> 
+#include <algorithm>
 #include <cctype>
 #include <locale>
 #include <filesystem>
@@ -39,43 +39,43 @@ std::string trimLeft(const std::string &str, const std::string &whitespace = "\n
 
 std::string trimRight(const std::string &str, const std::string &whitespace = "\n\r\t ")
 {
-	size_t  uIndex = str.find_last_not_of(whitespace);
+	size_t uIndex = str.find_last_not_of(whitespace);
 	if (uIndex != std::string::npos)
 		return str.substr(0, uIndex + 1);
 
 	return str;
 }
 
-std::string trim(const std::string &str, const std::string & whitespace = "\n\r\t ")
+std::string trim(const std::string &str, const std::string &whitespace = "\n\r\t ")
 {
 	return trimRight(trimLeft(str, whitespace), whitespace);
 }
 
-template<class e, class t, int N>
-std::basic_istream<e, t>& operator>>(std::basic_istream<e, t>& in, const e(&sliteral)[N])
+template <class e, class t, int N>
+std::basic_istream<e, t> &operator>>(std::basic_istream<e, t> &in, const e (&sliteral)[N])
 {
-	std::array<e, N - 1> buffer; //get buffer
-	in >> buffer[0]; //skips whitespace
+	std::array<e, N - 1> buffer; // get buffer
+	in >> buffer[0];			 // skips whitespace
 	if (N > 2)
-		in.read(&buffer[1], N - 2); //read the rest
-	if (strncmp(&buffer[0], sliteral, N - 1)) //if it failed
-		in.setstate(in.rdstate() | std::ios::failbit); //set the state
+		in.read(&buffer[1], N - 2);					   // read the rest
+	if (strncmp(&buffer[0], sliteral, N - 1))		   // if it failed
+		in.setstate(in.rdstate() | std::ios::failbit); // set the state
 	return in;
 }
 
-template<class e, class t>
-std::basic_istream<e, t>& operator>>(std::basic_istream<e, t>& in, const e& cliteral)
+template <class e, class t>
+std::basic_istream<e, t> &operator>>(std::basic_istream<e, t> &in, const e &cliteral)
 {
-	e buffer;  //get buffer
-	in >> buffer; //read data
-	if (buffer != cliteral) //if it failed
-		in.setstate(in.rdstate() | std::ios::failbit); //set the state
+	e buffer;										   // get buffer
+	in >> buffer;									   // read data
+	if (buffer != cliteral)							   // if it failed
+		in.setstate(in.rdstate() | std::ios::failbit); // set the state
 	return in;
 }
 
-//redirect mutable char arrays to their normal function
-template<class e, class t, int N>
-std::basic_istream<e, t>& operator>>(std::basic_istream<e, t>& in, e(&carray)[N])
+// redirect mutable char arrays to their normal function
+template <class e, class t, int N>
+std::basic_istream<e, t> &operator>>(std::basic_istream<e, t> &in, e (&carray)[N])
 {
 	return std::operator>>(in, carray);
 }
@@ -83,7 +83,6 @@ std::basic_istream<e, t>& operator>>(std::basic_istream<e, t>& in, e(&carray)[N]
 class ObjLoader
 {
 public:
-
 	struct ObjGroup
 	{
 		std::string name;
@@ -98,11 +97,11 @@ public:
 		// Material Name
 		std::string name;
 		// Ambient Color
-		vec3 Ka = vec3(0.2f,0.2f,0.2f);
+		vec3 Ka = vec3(0.2f, 0.2f, 0.2f);
 		// Diffuse Color
-		vec3 Kd = vec3(0.8f,0.8f,0.8f);
+		vec3 Kd = vec3(0.8f, 0.8f, 0.8f);
 		// Specular Color
-		vec3 Ks = vec3(1.0f,1.0f,1.0f);
+		vec3 Ks = vec3(1.0f, 1.0f, 1.0f);
 		// Specular Exponent
 		float Ns = 0.0f;
 		// Dissolve
@@ -123,7 +122,7 @@ public:
 		std::string map_bump;
 	};
 
-	bool loadObjFile(const std::string & filename)
+	bool loadObjFile(const std::string &filename)
 	{
 		std::filesystem::path path(filename);
 		std::ifstream is(filename);
@@ -131,15 +130,15 @@ public:
 		if (!is.is_open())
 			return false;
 
-		std::vector< vec3 > positions;
-		std::vector< vec3 > normals;
-		std::vector< vec2 > texCoords;
+		std::vector<vec3> positions;
+		std::vector<vec3> normals;
+		std::vector<vec2> texCoords;
 
 		positions.push_back(vec3(0.0f));
 		normals.push_back(vec3(0.0f));
 		texCoords.push_back(vec2(1.0f));
 
-		std::unordered_map< std::string, int > materialMap;
+		std::unordered_map<std::string, int> materialMap;
 		std::vector<ObjMaterial> materials;
 
 		ObjMaterial defaultMaterial;
@@ -151,7 +150,7 @@ public:
 		std::string currentMaterial;
 		currentMaterial = defaultMaterial.name;
 
-		std::unordered_map< std::string, typename std::list<ObjGroup>::iterator > groupMap;
+		std::unordered_map<std::string, typename std::list<ObjGroup>::iterator> groupMap;
 		std::list<ObjGroup> groupList;
 		std::list<ObjGroup>::iterator groupIterator;
 
@@ -256,11 +255,11 @@ public:
 					case 'o':
 					{
 						std::string groupName;
-						
-						if (getline(iss,groupName))
+
+						if (getline(iss, groupName))
 						{
 							groupName = trim(groupName);
-							std::unordered_map< std::string, typename std::list<ObjGroup>::iterator >::iterator j = groupMap.find(groupName);
+							std::unordered_map<std::string, typename std::list<ObjGroup>::iterator>::iterator j = groupMap.find(groupName);
 
 							if (j == groupMap.end())
 							{
@@ -289,23 +288,23 @@ public:
 							// v//n
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							if (iss >> v >> ("//") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							while (iss >> v >> ("//") >> n)
@@ -318,9 +317,9 @@ public:
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(groupIterator->normalIndices[groupIterator->normalIndices.size() - 2]);
 
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							break;
@@ -332,22 +331,22 @@ public:
 						if (iss >> v >> ("/") >> t >> ("/") >> n)
 						{
 							// v/t/n
-							groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-							groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
-							groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+							groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+							groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
+							groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 
 							if (iss >> v >> ("/") >> t >> ("/") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							if (iss >> v >> ("/") >> t >> ("/") >> n)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							while (iss >> v >> ("/") >> t >> ("/") >> n)
@@ -360,9 +359,9 @@ public:
 								groupIterator->texCoordIndices.push_back(groupIterator->texCoordIndices[groupIterator->texCoordIndices.size() - 2]);
 								groupIterator->normalIndices.push_back(groupIterator->normalIndices[groupIterator->normalIndices.size() - 2]);
 
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
-								groupIterator->normalIndices.push_back(n < 0 ? (uint) (n + normals.size()) : (uint) (n));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
+								groupIterator->normalIndices.push_back(n < 0 ? (uint)(n + normals.size()) : (uint)(n));
 							}
 
 							break;
@@ -374,21 +373,21 @@ public:
 						if (iss >> v >> ("/") >> t)
 						{
 							// v/t
-							groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-							groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
+							groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+							groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
 							groupIterator->normalIndices.push_back(0);
 
 							if (iss >> v >> ("/") >> t)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v >> ("/") >> t)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
@@ -402,8 +401,8 @@ public:
 								groupIterator->texCoordIndices.push_back(groupIterator->texCoordIndices[groupIterator->texCoordIndices.size() - 2]);
 								groupIterator->normalIndices.push_back(0);
 
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
-								groupIterator->texCoordIndices.push_back(t < 0 ? (uint) (t + texCoords.size()) : (uint) (t));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
+								groupIterator->texCoordIndices.push_back(t < 0 ? (uint)(t + texCoords.size()) : (uint)(t));
 								groupIterator->normalIndices.push_back(0);
 							}
 
@@ -417,21 +416,21 @@ public:
 							// v
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
 
 							if (iss >> v)
 							{
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
@@ -446,7 +445,7 @@ public:
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 
-								groupIterator->positionIndices.push_back(v < 0 ? (uint) (v + positions.size()) : (uint) (v));
+								groupIterator->positionIndices.push_back(v < 0 ? (uint)(v + positions.size()) : (uint)(v));
 								groupIterator->texCoordIndices.push_back(0);
 								groupIterator->normalIndices.push_back(0);
 							}
@@ -475,9 +474,9 @@ public:
 				{
 					for (uint j = 0; j < i->positionIndices.size() - 2; j += 3)
 					{
-						const vec3 & p0 = positions[i->positionIndices[j + 0]];
-						const vec3 & p1 = positions[i->positionIndices[j + 1]];
-						const vec3 & p2 = positions[i->positionIndices[j + 2]];
+						const vec3 &p0 = positions[i->positionIndices[j + 0]];
+						const vec3 &p1 = positions[i->positionIndices[j + 1]];
+						const vec3 &p2 = positions[i->positionIndices[j + 2]];
 
 						if (i->normalIndices[j + 0] == 0 || i->normalIndices[j + 1] == 0 || i->normalIndices[j + 2] == 0)
 						{
@@ -500,8 +499,8 @@ public:
 			}
 
 			// compute vertex normals
-			std::vector< vec3 > vertexNormals(positions.size());
-			std::vector< vec3 > groupNormals(positions.size());
+			std::vector<vec3> vertexNormals(positions.size());
+			std::vector<vec3> groupNormals(positions.size());
 
 			for (std::list<ObjGroup>::iterator i = groupList.begin(); i != groupList.end(); i++)
 			{
@@ -587,9 +586,8 @@ public:
 		}
 
 		m_materials.reserve(materials.size());
-		
 
-		for (auto & m : materials)
+		for (auto &m : materials)
 		{
 			Material newMaterial;
 			newMaterial.ambient = m.Ka;
@@ -663,13 +661,12 @@ public:
 			}
 
 			m_materials.push_back(newMaterial);
-
 		}
 
 		return true;
 	}
 
-	bool loadMtlFile(const std::string & filename, std::vector<ObjMaterial> & materials, std::unordered_map< std::string, int > & materialMap)
+	bool loadMtlFile(const std::string &filename, std::vector<ObjMaterial> &materials, std::unordered_map<std::string, int> &materialMap)
 	{
 		std::ifstream is(filename);
 
@@ -821,7 +818,7 @@ public:
 		return true;
 	}
 
-	std::unique_ptr<Texture> loadTexture(const std::string & filename)
+	std::unique_ptr<Texture> loadTexture(const std::string &filename)
 	{
 		int width, height, channels;
 
@@ -858,8 +855,8 @@ public:
 				format = GL_RGBA;
 				break;
 			}
-				
-			texture->image2D(0, format, ivec2(width,height), 0, format, GL_UNSIGNED_BYTE, data);
+
+			texture->image2D(0, format, ivec2(width, height), 0, format, GL_UNSIGNED_BYTE, data);
 			texture->generateMipmap();
 
 			stbi_image_free(data);
@@ -870,46 +867,43 @@ public:
 		return std::unique_ptr<Texture>();
 	}
 
-	const std::vector<Group> & groups() const
+	const std::vector<Group> &groups() const
 	{
 		return m_groups;
 	}
 
-	const std::vector<Vertex> & vertices() const
+	const std::vector<Vertex> &vertices() const
 	{
 		return m_vertices;
 	}
 
-	const std::vector<uint> & indices() const
+	const std::vector<uint> &indices() const
 	{
 		return m_indices;
 	}
 
-	const std::vector<Material> & materials() const
+	const std::vector<Material> &materials() const
 	{
 		return m_materials;
 	}
 
 private:
-
-	std::vector < Group > m_groups;
-	std::vector < Vertex > m_vertices;
-	std::vector < glm::uint > m_indices;
-	std::vector < Material > m_materials;
-
+	std::vector<Group> m_groups;
+	std::vector<Vertex> m_vertices;
+	std::vector<glm::uint> m_indices;
+	std::vector<Material> m_materials;
 };
 
 Model::Model()
 {
-
 }
 
-Model::Model(const std::string& filename)
+Model::Model(const std::string &filename)
 {
 	load(filename);
 }
 
-void Model::load(const std::string& filename)
+void Model::load(const std::string &filename)
 {
 	globjects::debug() << "Loading file " << filename << " ...";
 
@@ -928,7 +922,7 @@ void Model::load(const std::string& filename)
 
 		for (auto i : m_indices)
 		{
-			const auto & v = m_vertices[i];
+			const auto &v = m_vertices[i];
 			m_minimumBounds = min(m_minimumBounds, v.position);
 			m_maximumBounds = max(m_maximumBounds, v.position);
 		}
@@ -936,8 +930,8 @@ void Model::load(const std::string& filename)
 		globjects::debug() << "Minimum bounds: " << m_minimumBounds;
 		globjects::debug() << "Maximum bounds: " << m_maximumBounds;
 
-		m_vertexBuffer->setStorage(m_vertices, gl::GL_NONE_BIT);
-		m_indexBuffer->setStorage(m_indices, gl::GL_NONE_BIT);
+		m_vertexBuffer->setData(m_vertices, gl::GL_STATIC_DRAW);
+		m_indexBuffer->setData(m_indices, gl::GL_STATIC_DRAW);
 
 		auto vertexBindingPosition = m_vertexArray->binding(0);
 		vertexBindingPosition->setAttribute(0);
@@ -958,7 +952,6 @@ void Model::load(const std::string& filename)
 		m_vertexArray->enable(2);
 
 		m_vertexArray->bindElementBuffer(m_indexBuffer.get());
-
 	}
 	else
 	{
@@ -966,27 +959,27 @@ void Model::load(const std::string& filename)
 	}
 }
 
-const std::string & Model::filename() const
+const std::string &Model::filename() const
 {
 	return m_filename;
 }
 
-const std::vector<Group> & Model::groups() const
+const std::vector<Group> &Model::groups() const
 {
 	return m_groups;
 }
 
-const std::vector<Vertex> & Model::vertices() const
+const std::vector<Vertex> &Model::vertices() const
 {
 	return m_vertices;
 }
 
-const std::vector<uint> & Model::indices() const
+const std::vector<uint> &Model::indices() const
 {
 	return m_indices;
 }
 
-const std::vector<Material> & Model::materials() const
+const std::vector<Material> &Model::materials() const
 {
 	return m_materials;
 }
@@ -1001,18 +994,17 @@ vec3 Model::maximumBounds() const
 	return m_maximumBounds;
 }
 
-VertexArray & Model::vertexArray()
+VertexArray &Model::vertexArray()
 {
 	return *m_vertexArray.get();
 }
 
-Buffer & Model::vertexBuffer()
+Buffer &Model::vertexBuffer()
 {
 	return *m_vertexBuffer.get();
 }
 
-Buffer & Model::indexBuffer()
+Buffer &Model::indexBuffer()
 {
 	return *m_indexBuffer.get();
 }
-

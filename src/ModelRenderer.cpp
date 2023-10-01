@@ -20,9 +20,9 @@ using namespace gl;
 using namespace glm;
 using namespace globjects;
 
-ModelRenderer::ModelRenderer(Viewer* viewer) : Renderer(viewer)
+ModelRenderer::ModelRenderer(Viewer *viewer) : Renderer(viewer)
 {
-	m_lightVertices->setStorage(std::array<vec3, 1>({ vec3(0.0f) }), GL_NONE_BIT);
+	m_lightVertices->setData(std::array<vec3, 1>({vec3(0.0f)}), gl::GL_STATIC_DRAW);
 	auto lightVertexBinding = m_lightArray->binding(0);
 	lightVertexBinding->setBuffer(m_lightVertices.get(), 0, sizeof(vec3));
 	lightVertexBinding->setFormat(3, GL_FLOAT);
@@ -30,16 +30,17 @@ ModelRenderer::ModelRenderer(Viewer* viewer) : Renderer(viewer)
 	m_lightArray->unbind();
 
 	createShaderProgram("model-base", {
-		{ GL_VERTEX_SHADER,"./res/model/model-base-vs.glsl" },
-		{ GL_GEOMETRY_SHADER,"./res/model/model-base-gs.glsl" },
-		{ GL_FRAGMENT_SHADER,"./res/model/model-base-fs.glsl" },
-		}, 
-		{ "./res/model/model-globals.glsl" });
+										  {GL_VERTEX_SHADER, "./res/model/model-base-vs.glsl"},
+										  {GL_GEOMETRY_SHADER, "./res/model/model-base-gs.glsl"},
+										  {GL_FRAGMENT_SHADER, "./res/model/model-base-fs.glsl"},
+									  },
+						{"./res/model/model-globals.glsl"});
 
 	createShaderProgram("model-light", {
-		{ GL_VERTEX_SHADER,"./res/model/model-light-vs.glsl" },
-		{ GL_FRAGMENT_SHADER,"./res/model/model-light-fs.glsl" },
-		}, { "./res/model/model-globals.glsl" });
+										   {GL_VERTEX_SHADER, "./res/model/model-light-vs.glsl"},
+										   {GL_FRAGMENT_SHADER, "./res/model/model-light-fs.glsl"},
+									   },
+						{"./res/model/model-globals.glsl"});
 }
 
 void ModelRenderer::display()
@@ -69,8 +70,8 @@ void ModelRenderer::display()
 
 	viewer()->scene()->model()->vertexArray().bind();
 
-	const std::vector<Group> & groups = viewer()->scene()->model()->groups();
-	const std::vector<Material> & materials = viewer()->scene()->model()->materials();
+	const std::vector<Group> &groups = viewer()->scene()->model()->groups();
+	const std::vector<Material> &materials = viewer()->scene()->model()->materials();
 
 	static std::vector<bool> groupEnabled(groups.size(), true);
 	static bool wireframeEnabled = true;
@@ -86,7 +87,7 @@ void ModelRenderer::display()
 		{
 			if (ImGui::CollapsingHeader("Wireframe"))
 			{
-				ImGui::ColorEdit4("Line Color", (float*)&wireframeLineColor, ImGuiColorEditFlags_AlphaBar);
+				ImGui::ColorEdit4("Line Color", (float *)&wireframeLineColor, ImGuiColorEditFlags_AlphaBar);
 			}
 		}
 
@@ -98,7 +99,6 @@ void ModelRenderer::display()
 				ImGui::Checkbox(groups.at(i).name.c_str(), &checked);
 				groupEnabled[i] = checked;
 			}
-
 		}
 
 		ImGui::EndMenu();
@@ -113,14 +113,14 @@ void ModelRenderer::display()
 	shaderProgramModelBase->setUniform("worldLightPosition", vec3(worldLightPosition));
 	shaderProgramModelBase->setUniform("wireframeEnabled", wireframeEnabled);
 	shaderProgramModelBase->setUniform("wireframeLineColor", wireframeLineColor);
-	
+
 	shaderProgramModelBase->use();
 
 	for (uint i = 0; i < groups.size(); i++)
 	{
 		if (groupEnabled.at(i))
 		{
-			const Material & material = materials.at(groups.at(i).materialIndex);
+			const Material &material = materials.at(groups.at(i).materialIndex);
 
 			shaderProgramModelBase->setUniform("diffuseColor", material.diffuse);
 
@@ -130,7 +130,7 @@ void ModelRenderer::display()
 				material.diffuseTexture->bindActive(0);
 			}
 
-			viewer()->scene()->model()->vertexArray().drawElements(GL_TRIANGLES, groups.at(i).count(), GL_UNSIGNED_INT, (void*)(sizeof(GLuint)*groups.at(i).startIndex));
+			viewer()->scene()->model()->vertexArray().drawElements(GL_TRIANGLES, groups.at(i).count(), GL_UNSIGNED_INT, (void *)(sizeof(GLuint) * groups.at(i).startIndex));
 
 			if (material.diffuseTexture)
 			{
@@ -142,7 +142,6 @@ void ModelRenderer::display()
 	shaderProgramModelBase->release();
 
 	viewer()->scene()->model()->vertexArray().unbind();
-
 
 	if (lightSourceEnabled)
 	{
